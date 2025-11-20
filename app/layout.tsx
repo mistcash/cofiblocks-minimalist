@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MIST.cash Ramp",
-  description: "Convert USDC to Kenyan Shillings via M-Pesa",
+  title: "CofI Coffee Shop",
+  description: "Premium Caturra & Catuai Coffee Blends - 250g for $7.5",
 };
 
 export default function RootLayout({
