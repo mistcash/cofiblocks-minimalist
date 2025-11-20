@@ -6,6 +6,8 @@
 }
 
 @theme inline {
+  --color-yellow: #ffc222;
+  --color-green: #1a423d;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);

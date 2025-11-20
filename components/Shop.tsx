@@ -170,29 +170,22 @@ const Shop: React.FC = () => {
 				<Image
 					src="/images/logo.png"
 					alt="Coffee"
-					width={100}
+					width={80}
 					height={200}
 					priority
 				/>
 			</div>
 
-			<div className='p-6 mb-8' style={{ backgroundColor: '#1a423d' }}>
-				<h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-4">
+			<div className='p-6 mb-8 bg-green'>
+				<h2 className="text-lg font-light text-yellow text-center mb-4">
 					The Coffee Community
 				</h2>
-				<p className="text-md text-gray-300 text-center max-w-2xl mx-auto">
-					Choose from our expertly roasted Caturra & Catuai blends
+				<p className="text-3xl text-gray-300 text-center max-w-2xl mx-auto">
+					Choose your coffee
 				</p>
 			</div>
 
-			<div className='max-w-4xl'>
-
-				{/* Balance Display */}
-				{address && (
-					<div className="text-center mb-6 text-gray-300">
-						USDC Balance: <span className="text-white font-semibold">${balance}</span>
-					</div>
-				)}
+			<div className='max-w-4xl m-auto'>
 
 				{/* Product Cards */}
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -200,27 +193,29 @@ const Shop: React.FC = () => {
 						<div
 							key={product.id}
 							onClick={() => setSelectedProduct(product.id)}
-							className={`bg-gray-800 rounded-lg p-6 border-2 transition-all cursor-pointer ${selectedProduct === product.id
-								? 'border-yellow-400 shadow-lg shadow-yellow-400/20'
-								: 'border-gray-700 hover:border-gray-600'
+							className={`rounded-lg p-6 border-2 transition-all cursor-pointer ${selectedProduct === product.id
+								? 'border-yellow shadow-lg shadow-yellow/20'
+								: 'border-gray-700 hover:border-gray-600 opacity-80'
 								}`}
+							style={{ backgroundColor: '#fff' }}
 						>
 							<div className="flex items-start justify-between mb-4">
 								<div>
-									<h3 className="text-xl font-bold text-white mb-1">
+									<h3 className="text-xl font-bold text-green mb-1">
 										{product.name}
 									</h3>
-									<p className="text-gray-400 text-sm">Roasted by {product.roaster}</p>
+									<p className="text-gray-800 text-sm">Roasted by {product.roaster}</p>
 								</div>
 								{selectedProduct === product.id && (
-									<div className="bg-yellow-400 text-black rounded-full p-2">
-										<ShoppingCart className="w-5 h-5" />
+									<div className="bg-yellow text-black rounded-full p-2">
+										{/* <ShoppingCart className="w-5 h-5" /> */}
+										<CheckCircle className="w-5 h-5" />
 									</div>
 								)}
 							</div>
 							<div className="flex items-center justify-between">
-								<span className="text-gray-400">{product.quantity}g</span>
-								<span className="text-2xl font-bold text-yellow-400">
+								<span className="text-gray-600">{product.quantity}g</span>
+								<span className="text-2xl font-bold text-yellow">
 									${product.price.toFixed(2)}
 								</span>
 							</div>
@@ -230,17 +225,17 @@ const Shop: React.FC = () => {
 
 				{/* Checkout Form */}
 				{selectedProduct && (
-					<form onSubmit={handlePayment} className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-						<h3 className="text-xl font-bold text-white mb-4">Complete Your Purchase</h3>
-
+					<form onSubmit={handlePayment} className="rounded-lg p-6 border border-gray-700" style={{ backgroundColor: '#1a423d' }}>
+						<h3 className="text-lg font-normal text-white mb-4">Check out our counter for stock availability.</h3>
 						<div className="mb-4">
-							<label className="text-white text-sm font-medium mb-2 block">
+							<label className="text-white text-xs font-medium mb-1 ml-1 block">
 								Full Name
 							</label>
 							<input
 								type="text"
 								required
-								className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 border border-gray-600 focus:border-yellow-400 focus:outline-none"
+								className="w-full text-white rounded-lg px-4 py-3 border border-gray-600 focus:border-yellow focus:outline-none"
+								style={{ backgroundColor: '#0d2e2a' }}
 								placeholder="John Doe"
 								value={customerName}
 								onChange={(e) => setCustomerName(e.target.value)}
@@ -248,13 +243,14 @@ const Shop: React.FC = () => {
 						</div>
 
 						<div className="mb-6">
-							<label className="text-white text-sm font-medium mb-2 block">
+							<label className="text-white text-xs font-medium mb-1 ml-1 block">
 								Email Address
 							</label>
 							<input
 								type="email"
 								required
-								className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 border border-gray-600 focus:border-yellow-400 focus:outline-none"
+								className="w-full text-white rounded-lg px-4 py-3 border border-gray-600 focus:border-yellow focus:outline-none"
+								style={{ backgroundColor: '#0d2e2a' }}
 								placeholder="john@example.com"
 								value={customerEmail}
 								onChange={(e) => setCustomerEmail(e.target.value)}
@@ -279,7 +275,7 @@ const Shop: React.FC = () => {
 				{/* Processing Overlay */}
 				{isProcessing && (
 					<div className="fixed inset-0 bg-black/75 flex items-center justify-center z-50 p-4" style={{ 'backdropFilter': 'blur(4px)' }}>
-						<div className="rounded-2xl p-8 max-w-lg w-full border-2 shadow-2xl" style={{
+						<div className="bg-green rounded-xl p-8 max-w-lg w-full shadow-2xl" style={{
 							borderColor: processStatus.includes("Error") ? '#ef4444' : processStatus.includes("Success") ? '#10b981' : '#facc15'
 						}}>
 							<div className="text-center">
@@ -294,8 +290,8 @@ const Shop: React.FC = () => {
 											<CheckCircle className="w-12 h-12 text-green-500" />
 										</div>
 									) : (
-										<div className="w-20 h-20 bg-yellow-400/20 rounded-full flex items-center justify-center mx-auto">
-											<div className="w-12 h-12 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin" />
+										<div className="w-20 h-20 bg-yellow/20 rounded-full flex items-center justify-center mx-auto">
+											<div className="w-12 h-12 border-4 border-yellow border-t-transparent rounded-full animate-spin" />
 										</div>
 									)}
 								</div>
@@ -311,7 +307,7 @@ const Shop: React.FC = () => {
 
 								{/* Success Details */}
 								{processStatus.includes("Success") && selectedProductData && (
-									<div className="bg-gray-800 rounded-lg p-4 mb-6 text-left">
+									<div className="rounded-lg p-4 mb-6 text-left" style={{ backgroundColor: '#1a423d' }}>
 										<div className="flex items-center justify-between mb-2">
 											<span className="text-gray-400 text-sm">Product:</span>
 											<span className="text-white font-semibold">{selectedProductData.name}</span>

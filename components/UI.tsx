@@ -14,7 +14,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 export const Button = ({ children, action, variant = 'primary', className = '', isLoading = false, ...props }: ButtonProps) => {
 	const baseClasses = `${baseUIBoxClasses} cursor-pointer py-4 px-5`;
 	const variants = {
-		primary: "bg-yellow-400 text-black hover:bg-yellow-500",
+		primary: "bg-yellow text-black hover:bg-yellow-500",
 		secondary: "bg-blue-700 text-white hover:bg-blue-600",
 		tertiary: "bg-gray-700 text-white hover:bg-gray-600",
 	};

@@ -67,10 +67,10 @@ npm start
 mist-ramp/
 ├── app/
 │   ├── layout.tsx          # Root layout with StarknetProvider
-│   ├── page.tsx            # Home page with MPesaDepositUI
+│   ├── page.tsx            # Home page with Shop
 │   └── globals.css         # Global styles
 ├── components/
-│   ├── MPesaDepositUI.tsx  # Main deposit interface
+│   ├── Shop.tsx  # Main deposit interface
 │   ├── StarknetProvider.tsx # Starknet configuration
 │   ├── StarknetWalletGate.tsx # Wallet connection component
 │   └── UI.tsx              # Reusable UI components
@@ -79,7 +79,7 @@ mist-ramp/
 
 ## Components
 
-### MPesaDepositUI
+### Shop
 The main component that handles:
 - M-Pesa phone number input with validation
 - USDC amount input
