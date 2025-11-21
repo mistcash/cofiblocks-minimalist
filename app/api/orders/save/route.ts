@@ -5,6 +5,8 @@ export async function POST(request: NextRequest) {
 	try {
 		const orderData = await request.json();
 
+		console.log('Received order data:', JSON.stringify(orderData, null, 2));
+
 		// Validate required fields
 		if (!orderData.customerName || !orderData.customerEmail || !orderData.walletAddress || !orderData.product) {
 			return NextResponse.json(
@@ -15,11 +17,15 @@ export async function POST(request: NextRequest) {
 
 		// Save to Firebase
 		const ordersCollection = db.collection('CopiBlocksOrders');
-		const docRef = await ordersCollection.add({
+		const dataToSave = {
 			...orderData,
 			createdAt: new Date(),
 			status: 'pending'
-		});
+		};
+
+		console.log('Saving to Firebase:', JSON.stringify(dataToSave, null, 2));
+
+		const docRef = await ordersCollection.add(dataToSave);
 
 		return NextResponse.json({
 			success: true,

@@ -31,14 +31,14 @@ const products: Product[] = [
 		id: '1',
 		name: 'Caturra & Catuai Blend',
 		roaster: 'Tio Hugo',
-		price: .75,
+		price: 7.5,
 		quantity: 250
 	},
 	{
 		id: '2',
 		name: 'Caturra & Catuai Blend',
 		roaster: 'Las Peñas',
-		price: .75,
+		price: 7.5,
 		quantity: 250
 	}
 ];
@@ -92,8 +92,10 @@ const Shop: React.FC = () => {
 		setProcessStatus("Preparing transaction...");
 
 		try {
-			const secretInput = await hashOrderData('salt', customerEmail, product.id);
-			const txSecretValue = await txSecret(secretInput.toString(), SN_CONTRACT_ADDRESS);
+			const claimingKey = await hashOrderData('salt', customerEmail, customerName);
+			const txSecretValue = await txSecret(claimingKey.toString(), SN_CONTRACT_ADDRESS);
+
+			console.log('claimingKey', claimingKey, 'txSecretValue', txSecretValue)
 
 			// Convert USDC amount to proper format (6 decimals for USDC)
 			const amount_bi = fmtAmtToBigInt(product.price.toFixed(2), USDC_TOKEN.decimals || 6);
@@ -129,6 +131,7 @@ const Shop: React.FC = () => {
 				},
 				amount: product.price,
 				salt,
+				claimingKey: claimingKey.toString(),
 				transactionHash: txResponse.transaction_hash,
 				timestamp: new Date().toISOString()
 			};
@@ -142,17 +145,7 @@ const Shop: React.FC = () => {
 			if (!saveResponse.ok) {
 				throw new Error('Failed to save order details');
 			}
-
 			setProcessStatus("Success! Order completed.");
-
-			// Reset form after 2 seconds
-			setTimeout(() => {
-				setSelectedProduct(null);
-				setCustomerName('');
-				setCustomerEmail('');
-				setIsProcessing(false);
-			}, 2000);
-
 		} catch (error) {
 			console.error("Payment failed:", error);
 			setProcessStatus("Error occurred");
@@ -185,7 +178,7 @@ const Shop: React.FC = () => {
 				</p>
 			</div>
 
-			<div className='max-w-4xl m-auto'>
+			<div className='max-w-4xl m-auto px-6'>
 
 				{/* Product Cards */}
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -194,10 +187,9 @@ const Shop: React.FC = () => {
 							key={product.id}
 							onClick={() => setSelectedProduct(product.id)}
 							className={`rounded-lg p-6 border-2 transition-all cursor-pointer ${selectedProduct === product.id
-								? 'border-yellow shadow-lg shadow-yellow/20'
+								? 'border-yellow shadow-lg shadow-yellow/20 bg-yellow/20'
 								: 'border-gray-700 hover:border-gray-600 opacity-80'
 								}`}
-							style={{ backgroundColor: '#fff' }}
 						>
 							<div className="flex items-start justify-between mb-4">
 								<div>
@@ -257,7 +249,7 @@ const Shop: React.FC = () => {
 							/>
 						</div>
 
-						<StarknetWalletGate label={<><WalletMinimal className="w-5 h-5" />Connect Wallet</>}>
+						<StarknetWalletGate connectedClass="text-white" label={<><WalletMinimal className="w-5 h-5" />Connect Wallet</>}>
 							<Button disabled={waiting} type="submit" variant="primary">
 								<Send className="w-5 h-5" />
 								{waiting ? 'Processing...' : `Pay $${selectedProductData?.price.toFixed(2)}`}
@@ -412,13 +404,15 @@ function genSalt(): string {
 	return '0x' + Math.random().toString(16).substring(1, 8) + Math.random().toString(16).substring(1, 8)
 }
 
-async function hashOrderData(salt: string, email: string, productId: string): Promise<bigint> {
-	const data = salt + email + productId;
+async function hashOrderData(salt: string, email: string, name: string): Promise<bigint> {
+	salt += '';
+	const data = email + name;
 	const encoder = new TextEncoder();
 	const dataBuffer = encoder.encode(data);
 	const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
 	const hashArray = Array.from(new Uint8Array(hashBuffer));
-	const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+	// Take only first 30 bytes (200 bits) to keep under 200 bit limit
+	const hashHex = hashArray.slice(0, 30).map(b => b.toString(16).padStart(2, '0')).join('');
 	return BigInt('0x' + hashHex);
 }
 
