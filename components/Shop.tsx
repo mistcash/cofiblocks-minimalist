@@ -394,6 +394,29 @@ const Shop: React.FC = () => {
 					</div>
 				)}
 			</div>
+			
+			<div
+				class="flex items-center justify-center mb-12 md:mb-25 md:mt-10 mt-8"
+				style={{
+					margin: "8em auto 0",
+					opacity: "0.5",
+					borderTop: "1px solid #aaa",
+					paddingTop: "1em",
+				}}
+			>
+				<img
+					alt="Mist logo"
+					width="50"
+					height="50"
+					class="mr-2"
+					style={{
+						color: "transparent",
+						filter: "brightness(0)",
+					}}
+					src="https://mist.cash/mist-logo.svg"
+				/>
+				<b class="mx-2">PRIVATE</b>payment with MIST.cash
+			</div>
 		</div>
 	);
 };
